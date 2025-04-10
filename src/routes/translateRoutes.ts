@@ -1,16 +1,8 @@
-import { Request, Response } from 'express';
-import { errorResponse } from '../utils/errorUtils';
+import express from 'express';
+import translateControllerFunction from '../controllers/translateController';
 
-const translateControllerFunction = (req: Request, res: Response) => {
-  const { text, targetLanguage } = req.body;
+const router = express.Router();
 
-  if (!text || !targetLanguage) {
-    return errorResponse(res, 400, 'Bad Request', 'Missing required fields');
-  }
+router.post('/', translateControllerFunction);
 
-  const translatedText = `Translated (${targetLanguage}): ${text}`;
-
-  return res.status(200).json({ translatedText });
-};
-
-export default translateControllerFunction;
+export default router;

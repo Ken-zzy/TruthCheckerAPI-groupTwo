@@ -2,8 +2,11 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
 import { swaggerOptions } from './swaggeroptions';
+import { OpenAPIV3 } from 'openapi-types';
 
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+export const swaggerSpec: OpenAPIV3.Document<{}> = swaggerJSDoc(swaggerOptions);
+
 
 /**
  * Sets up Swagger Documentation for the API

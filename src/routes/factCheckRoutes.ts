@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import { createFactCheck, getFactChecks, getFactCheck } from '../controllers/factCheckController';
+import express, { Router } from 'express';
+import { createFactCheck, getAllFactChecks, getFactCheckById } from '../controllers/factCheckController';
 
-const router = Router();
+const router: Router = express.Router();
 
-router.post('/', createFactCheck);       // Create a new fact-check
-router.get('/', getFactChecks);          // Get all fact-checks (with filters)
-router.get('/:id', getFactCheck);        // Get a single fact-check by ID
+router.post('/', createFactCheck);
+router.get('/', getAllFactChecks);
+router.get('/:id', getFactCheckById);
 
 export default router;

@@ -33,7 +33,7 @@ app.use('/organizations', organizationRoutes);
 app.use('/claims', claimRoutes);
 app.use('/api/fact-checks', factCheckRoutes);
 app.use('/sources', sourceRoutes);
-app.use('/translate', translateRoutes);
+app.use('/api/v1/translate', translateRoutes);
 
 // Swagger docs route
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

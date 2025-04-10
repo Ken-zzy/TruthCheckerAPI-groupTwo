@@ -1,20 +1,46 @@
+import axios, { AxiosError } from 'axios';
 import { Request, Response } from 'express';
+import { errorResponse } from '../utils/errorUtils';
+import dotenv from 'dotenv';
 
-// Create Fact Check
-export const createFactCheck = (req: Request, res: Response) => {
-  // your logic here
-  res.status(201).json({ message: 'Fact Check created successfully' });
-};
+dotenv.config(); // Load environment variables
 
-// Get All Fact Checks
-export const getAllFactChecks = (req: Request, res: Response) => {
-  // your logic here
-  res.status(200).json({ message: 'All Fact Checks' });
-};
+interface FactCheckRequestBody {
+  query: string;
+}
 
-// Get Single Fact Check By Id
-export const getFactCheckById = (req: Request, res: Response) => {
-  const { id } = req.params;
-  // your logic here
-  res.status(200).json({ message: `Fact Check with id: ${id}` });
+export const factCheck = async (
+  req: Request<{}, {}, FactCheckRequestBody>,
+  res: Response
+) => {
+  const { query } = req.body;
+
+  if (!query) {
+    return errorResponse(res, 400, 'Bad Request', 'Missing query');
+  }
+
+  try {
+    const response = await axios.get(
+      `https://factchecktools.googleapis.com/v1alpha1/claims:search`,
+      {
+        params: {
+          query,
+          key: process.env.GOOGLE_FACTCHECK_API_KEY,
+        },
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: response.data.claims || [],
+    });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Axios error:', error.message);
+      return errorResponse(res, 500, 'Internal Server Error', error.message);
+    }
+
+    console.error('Unexpected error:', error);
+    return errorResponse(res, 500, 'Internal Server Error', 'Something went wrong');
+  }
 };

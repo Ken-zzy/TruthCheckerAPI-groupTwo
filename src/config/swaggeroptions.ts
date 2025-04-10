@@ -1,5 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import { Options } from 'swagger-jsdoc';
+import { OpenAPIV3 } from 'openapi-types';
 
 export const swaggerOptions: Options = {
   definition: {
@@ -18,7 +19,7 @@ export const swaggerOptions: Options = {
   },
   apis: ['src/routes/*.ts'], // Path to your route files for swagger doc generation
 };
-
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+export const swaggerSpec: OpenAPIV3.Document = swaggerJSDoc(swaggerOptions) as OpenAPIV3.Document;
+// const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 export default swaggerSpec;

@@ -1,8 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
-
+import translateRoutes from './routes/translateRoutes';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import organizationRoutes from './routes/organizationRoutes';
@@ -29,6 +32,7 @@ app.use('/organizations', organizationRoutes);
 app.use('/claims', claimRoutes);
 app.use('/fact-checks', factCheckRoutes);
 app.use('/sources', sourceRoutes);
+app.use('/translate', translateRoutes);
 
 // Swagger docs route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

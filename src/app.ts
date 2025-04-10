@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './config/swagger';
+import swaggerJsdoc from 'swagger-jsdoc';
+import { swaggerOptions, swaggerSpec } from './config/swagger';
 import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import translateRoutes from './routes/translateRoutes';
@@ -30,11 +31,12 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/organizations', organizationRoutes);
 app.use('/claims', claimRoutes);
-app.use('/fact-check', factCheckRoutes);
+app.use('/api/fact-checks', factCheckRoutes);
 app.use('/sources', sourceRoutes);
 app.use('/translate', translateRoutes);
 
 // Swagger docs route
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // 404 Handler

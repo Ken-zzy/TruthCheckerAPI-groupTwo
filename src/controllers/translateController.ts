@@ -1,21 +1,15 @@
 import { Request, Response } from 'express';
-import { errorResponse } from '../utils/errorUtils'; // Assuming errorUtils exists
+import { errorResponse } from '../utils/errorUtils';
 
-// Example translate controller function
-export const translateControllerFunction = async (req: Request, res: Response) => {
-  try {
-    const { text, targetLanguage } = req.body;
+export const translateControllerFunction = (req: Request, res: Response) => {
+  const { text, targetLanguage } = req.body;
 
-    if (!text || !targetLanguage) {
-      return errorResponse(res, 400, 'Missing required fields: text or targetLanguage');
-    }
-
-    // Fake translation logic (replace with real logic later)
-    const translatedText = `${text} (translated to ${targetLanguage})`;
-
-    return res.status(200).json({ translatedText });
-  } catch (error) {
-    console.error(error);
-    return errorResponse(res, 500, 'Something went wrong while translating');
+  if (!text || !targetLanguage) {
+    return errorResponse(res, 400, 'Bad Request', 'Missing required fields');
   }
+
+  // Dummy translation logic (replace with actual translation service later)
+  const translatedText = `Translated (${targetLanguage}): ${text}`;
+
+  return res.status(200).json({ translatedText });
 };

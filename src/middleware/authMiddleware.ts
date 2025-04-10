@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import config from '../config/config';
+import config from '../config';
 import { User } from '../types/user';
 
 // Conceptual "database" - replace with a real database

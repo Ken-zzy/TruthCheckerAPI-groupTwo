@@ -13,6 +13,7 @@ export const swaggerOptions: swaggerJSDoc.Options = {
         url: 'http://localhost:3000', // Update if deploying
       },
     ],
+    paths: {},
   },
   apis: ['./src/routes/*.ts'], // Adjust path to your route files
 };

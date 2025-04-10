@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import translateRoutes from './routes/translateRoutes';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
-import organizationRoutes from './routes/organizationRoutes';
+import { organizationRoutes } from './routes/organizationRoutes';
 import claimRoutes from './routes/claimRoutes';
 import factCheckRoutes from './routes/factCheckRoutes';
 import sourceRoutes from './routes/sourceRoutes';

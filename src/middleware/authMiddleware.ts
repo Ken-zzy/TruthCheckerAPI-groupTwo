@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { errorResponse } from '../utils/errorUtils';
 import config from '../config/config';
 import { User } from '../types/user';
 
 // Conceptual "database" - replace with a real database
 const users: User[] = [];
 
-const tokenRequired = (req: Request, res: Response, next: NextFunction) => {
+export const tokenRequired = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Token is missing or invalid' });

@@ -1,41 +1,52 @@
-import express, { Request, Response } from 'express';
-import { translateText } from '../utils/translateUtils';
+import express, { Request, Response, NextFunction } from 'express';
+import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
+import organizationRoutes from './routes/organizationRoutes';
+import claimRoutes from './routes/claimRoutes';
+import factCheckRoutes from './routes/factCheckRoutes';
+import sourceRoutes from './routes/sourceRoutes';
+import translateRoute from './routes/translateRoute';
+import { errorResponse } from './utils/errorUtils';
+import morgan from 'morgan'; // For more robust logging
 
-const router = express.Router();
+const app = express();
 
-/**
- * @route POST /translate
- * @body { text: string, to: string[] }
- */
-router.post('/', async (req: Request, res: Response) => {
-  const { text, to } = req.body;
+// Middleware
+app.use(express.json());
+app.use(morgan('dev'));
 
-  if (!text || !Array.isArray(to)) {
-    return res.status(400).json({
-      success: false,
-      message: '`text` and `to` (array of language codes) are required',
-    });
-  }
-
-  try {
-    const results: { lang: string; translation: string }[] = [];
-
-    for (const lang of to) {
-      const translation = await translateText(text, lang);
-      results.push({ lang, translation });
-    }
-
-    return res.status(200).json({
-      success: true,
-      original: text,
-      translations: results,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || 'Translation failed',
-    });
-  }
+// Root route
+app.get('/', (req: Request, res: Response) => {
+    res.send('API is running');
 });
 
-export default router;
+// Routes
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/organizations', organizationRoutes);
+app.use('/claims', claimRoutes);
+app.use('/fact-checks', factCheckRoutes);
+app.use('/sources', sourceRoutes);
+app.use('/translate', translateRoute);
+
+// 404 Handler
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route not found'
+    });
+});
+
+// Error handler
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof Error) {
+        console.error('Error:', err.message);
+        console.error(err.stack);
+        errorResponse(res, 500, 'Internal Server Error', err.message);
+    } else {
+        console.error('Unknown error occurred:', err);
+        errorResponse(res, 500, 'Internal Server Error', 'An unknown error occurred');
+    }
+});
+
+export default app;

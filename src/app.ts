@@ -30,7 +30,7 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/organizations', organizationRoutes);
 app.use('/claims', claimRoutes);
-app.use('/fact-checks', factCheckRoutes);
+app.use('/fact-check', factCheckRoutes);
 app.use('/sources', sourceRoutes);
 app.use('/translate', translateRoutes);
 

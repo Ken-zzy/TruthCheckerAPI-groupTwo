@@ -1,62 +1,32 @@
+import express, { Application, Request, Response } from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
+import translateRoutes from './routes/translateRoutes';
+import factCheckRoutes from './routes/factCheckRoutes';
+
 dotenv.config();
 
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
-import { swaggerOptions, swaggerSpec } from './config/swagger';
-import express, { Request, Response, NextFunction } from 'express';
-import morgan from 'morgan';
-import translateRoutes from './routes/translateRoutes';
-import authRoutes from './routes/authRoutes';
-import userRoutes from './routes/userRoutes';
-import { organizationRoutes } from './routes/organizationRoutes';
-import claimRoutes from './routes/claimRoutes';
-import factCheckRoutes from './routes/factCheckRoutes';
-import sourceRoutes from './routes/sourceRoutes';
-import { errorResponse } from './utils/errorUtils';
-
-const app = express();
+const app: Application = express();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
-app.use(morgan('dev')); // Use 'combined' format in production
+app.use(express.urlencoded({ extended: true }));
 
-// Health check route
-app.get('/', (_req: Request, res: Response) => {
-  res.send('API is running');
-});
+// Routes
+app.use('/api/translate', translateRoutes);
+app.use('/api/fact-check', factCheckRoutes);
 
-// Route mounting
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/organizations', organizationRoutes);
-app.use('/claims', claimRoutes);
-app.use('/api/fact-checks', factCheckRoutes);
-app.use('/sources', sourceRoutes);
-app.use('/api/v1/translate', translateRoutes);
-
-// Swagger docs route
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
+// Swagger Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// 404 Handler
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
+// Root Route
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    message: 'Welcome to TruthChecker API',
   });
-});
-
-// Central error handler
-app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  if (err instanceof Error) {
-    console.error('Error:', err.message);
-    console.error(err.stack);
-    errorResponse(res, 500, 'Internal Server Error', err.message);
-  } else {
-    console.error('Unknown error:', err);
-    errorResponse(res, 500, 'Internal Server Error', 'An unknown error occurred');
-  }
 });
 
 export default app;

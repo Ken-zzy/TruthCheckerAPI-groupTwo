@@ -18,4 +18,7 @@ export const swaggerOptions: Options = {
   },
   apis: ['src/routes/*.ts'], // Path to your route files for swagger doc generation
 };
-export const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+export default swaggerSpec;
